@@ -5,9 +5,9 @@ use validator::Validate;
 use wither::bson::{doc, oid::ObjectId};
 use wither::Model as WitherModel;
 
-use crate::utils::date;
-use crate::utils::date::Date;
-use crate::utils::models::ModelExt;
+use crate::helper::date;
+use crate::helper::date::Date;
+use crate::helper::models::ModelExt;
 
 impl ModelExt for Cat {
   type T = Cat;

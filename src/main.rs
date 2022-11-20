@@ -1,47 +1,37 @@
-use axum::{routing::get, Router};
 use std::net::SocketAddr;
-use tokio::signal;
+use tracing::info;
+
+mod app;
+mod database;
+mod errors;
+mod logger;
+mod models;
+mod routes;
+mod settings;
+mod helper;
+
+// There are a couple approaches to take when implementing E2E tests. This
+// approach adds tests on /src/tests, this way tests can reference modules
+// inside the src folder. Another approach would be to have the tests in a
+// /tests folder on the root of the project, to do this and be able to import
+// modules from the src folder, modules need to be exported as a lib.
+#[cfg(test)]
+mod tests;
+
+use errors::Error;
+use settings::get_settings;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(|| async { "Hello, World!" }));
+  let app = app::create_app().await;
 
-    let port = std::env::var("PORT")
-        .ok()
-        .and_then(|s| s.parse().ok())
-        .unwrap_or(3000);
+  let settings = get_settings();
+  let port = settings.server.port;
+  let address = SocketAddr::from(([127, 0, 0, 1], port));
 
-    let address = SocketAddr::from(([0, 0, 0, 0], port));
-
-    axum::Server::bind(&address)
-        .serve(app.into_make_service())
-        .with_graceful_shutdown(shutdown_signal())
-        .await
-        .unwrap();
-}
-
-async fn shutdown_signal() {
-    let ctrl_c = async {
-        signal::ctrl_c()
-            .await
-            .expect("failed to install Ctrl+C handler");
-    };
-
-    #[cfg(unix)]
-    let terminate = async {
-        signal::unix::signal(signal::unix::SignalKind::terminate())
-            .expect("failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    #[cfg(not(unix))]
-    let terminate = std::future::pending::<()>();
-
-    tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
-
-    println!("signal received, starting graceful shutdown");
+  info!("Server listening on {}", &address);
+  axum::Server::bind(&address)
+    .serve(app.into_make_service())
+    .await
+    .expect("Failed to start server");
 }

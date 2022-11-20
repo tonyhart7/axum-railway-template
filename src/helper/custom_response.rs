@@ -7,7 +7,7 @@ use axum::{
   use serde::Serialize;
   use tracing::error;
   
-  use crate::utils::pagination::Pagination;
+  use crate::helper::pagination::Pagination;
   
   #[derive(Debug)]
   pub struct CustomResponse<T: Serialize> {

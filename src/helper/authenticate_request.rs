@@ -7,8 +7,8 @@ use axum::{
   use crate::errors::AuthenticateError;
   use crate::errors::Error;
   use crate::settings::get_settings;
-  use crate::utils::token;
-  use crate::utils::token::TokenUser;
+  use crate::helper::token;
+  use crate::helper::token::TokenUser;
   
   #[async_trait]
   impl<B> FromRequest<B> for TokenUser
