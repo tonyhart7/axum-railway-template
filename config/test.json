@@ -2,11 +2,11 @@
     "environment": "test",
   
     "server": {
-      "port": 8088
+      "port": 3000
     },
   
     "database": {
-      "uri": "mongodb://localhost:27017",
+      "uri": "mongodb://containers-us-west-106.railway.app:6952",
       "name": "axum-template-test"
     },
   

@@ -2,16 +2,16 @@
     "environment": "development",
   
     "server": {
-      "port": 8080
+      "port": 3000
     },
     
     "database": {
-      "uri": "mongodb://localhost:27017",
+      "uri": "mongodb://containers-us-west-106.railway.app:6952",
       "name": "axum-template"
     },
     
     "auth": {
-      "secret": "secret"
+      "secret": "4qVC9Anzp2xcwuvi3CQZ"
     },
   
     "logger": {
